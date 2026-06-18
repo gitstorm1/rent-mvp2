@@ -30,6 +30,7 @@ export function UploadArea({ tenants }: { tenants: any[] }) {
     }
 
     const handleUpload = async (selectedFile: File) => {
+        console.log("File upload requested")
         setUploading(true)
         setExtracted(null)
         setSuccess(false)
@@ -51,7 +52,7 @@ export function UploadArea({ tenants }: { tenants: any[] }) {
         setUploading(false)
     }
 
-    const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSave = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
         setSaving(true)
 
