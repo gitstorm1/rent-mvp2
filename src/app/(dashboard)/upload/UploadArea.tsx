@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 //import { processBillFile, confirmAndSaveBill } from './actions'
 import { UploadCloud, FileText, CheckCircle } from 'lucide-react'
+import { processBillFile } from './actions'
 
 export function UploadArea({ tenants }: { tenants: any[] }) {
     const [file, setFile] = useState<File | null>(null)
@@ -37,6 +38,8 @@ export function UploadArea({ tenants }: { tenants: any[] }) {
 
         const formData = new FormData()
         formData.append('file', selectedFile)
+
+        await processBillFile(formData);
 
         /*const result = await processBillFile(formData)
         
