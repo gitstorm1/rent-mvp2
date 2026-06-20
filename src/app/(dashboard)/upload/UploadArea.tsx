@@ -4,6 +4,7 @@ import { useState, useRef } from 'react'
 //import { processBillFile, confirmAndSaveBill } from './actions'
 import { UploadCloud, FileText, CheckCircle } from 'lucide-react'
 import { processBillFile } from './actions'
+import { upload } from '@vercel/blob/client';
 
 export function UploadArea({ tenants }: { tenants: any[] }) {
     const [file, setFile] = useState<File | null>(null)
@@ -31,6 +32,34 @@ export function UploadArea({ tenants }: { tenants: any[] }) {
     }
 
     const handleUpload = async (selectedFile: File) => {
+        setUploading(true);
+        console.log("START UPLOAD");
+        // 1. Upload file directly from the browser to Vercel Blob
+        const blob = await upload(selectedFile.name, selectedFile, {
+            access: 'private',
+            handleUploadUrl: '/api/v1/bill/upload', // Handshake endpoint for security token
+        });
+
+        console.log("END UPLOAD");
+        // 2. The browser receives the direct public URL (e.g., https://xxx.public.blob.vercel-storage.com/bill.pdf)
+        console.log("Blob URL:", blob.url);
+        // 3. Send ONLY the URL to your Server Action to extract the bill
+        const result = await processBillFile(blob.url);
+
+        if (result.success) {
+            /*setExtracted({
+                ...result.data,
+                pdf_url: blob.url
+            });*/
+            console.log("Extraction result:", result);
+        } else {
+            alert(result.error);
+        }
+
+        setUploading(false);
+    };
+
+    /*const handleUpload = async (selectedFile: File) => {
         console.log("File upload requested")
         setUploading(true)
         setExtracted(null)
@@ -41,7 +70,7 @@ export function UploadArea({ tenants }: { tenants: any[] }) {
 
         await processBillFile(formData);
 
-        /*const result = await processBillFile(formData)
+        const result = await processBillFile(formData)
         
         if (result.success) {
           setExtracted({
@@ -50,10 +79,10 @@ export function UploadArea({ tenants }: { tenants: any[] }) {
           })
         } else {
           alert(result.error)
-        }*/
+        }
 
         setUploading(false)
-    }
+    }*/
 
     const handleSave = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
