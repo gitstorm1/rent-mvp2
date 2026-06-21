@@ -1,3 +1,4 @@
+import { createClient } from '@/lib/server';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
 
@@ -11,6 +12,12 @@ export async function POST(request: Request): Promise<NextResponse> {
             onBeforeGenerateToken: async (pathname) => {
                 // Authenticate the user here (e.g., check cookie or session)
                 // If unauthorized, throw an error.
+                const supabase = await createClient();
+
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                    throw new Error("Unauthorized");
+                }
 
                 return {
                     allowedContentTypes: ['application/pdf'],

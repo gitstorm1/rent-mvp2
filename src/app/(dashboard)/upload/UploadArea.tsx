@@ -35,8 +35,10 @@ export function UploadArea({ tenants }: { tenants: any[] }) {
         setUploading(true);
         console.log("START UPLOAD");
         // 1. Upload file directly from the browser to Vercel Blob
-        const blob = await upload(selectedFile.name, selectedFile, {
-            access: 'private',
+        const uniqueFilename = `${crypto.randomUUID()}-${selectedFile.name}`;
+
+        const blob = await upload(uniqueFilename, selectedFile, {
+            access: 'public',
             handleUploadUrl: '/api/v1/bill/upload', // Handshake endpoint for security token
         });
 
