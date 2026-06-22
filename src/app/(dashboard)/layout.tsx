@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Home, Users, Upload, FileText, LogOut } from 'lucide-react'
+import { Home, Users, Upload, LogOut } from 'lucide-react'
 
 export default async function DashboardLayout({
     children,

@@ -15,8 +15,9 @@ export async function processBillFile(blobUrl: string) {
     try {
         const data = await extractBillDetails(blobUrl);
         return { success: true, data };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        return { success: false, error: errorMessage };
     } finally {
         //await del(blobUrl).catch(() => { });
     }

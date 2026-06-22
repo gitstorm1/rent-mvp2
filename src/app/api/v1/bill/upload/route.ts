@@ -9,7 +9,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         const jsonResponse = await handleUpload({
             body,
             request,
-            onBeforeGenerateToken: async (pathname) => {
+            onBeforeGenerateToken: async () => {
                 // Authenticate the user here (e.g., check cookie or session)
                 // If unauthorized, throw an error.
                 const supabase = await createClient();
@@ -33,7 +33,8 @@ export async function POST(request: Request): Promise<NextResponse> {
         });
 
         return NextResponse.json(jsonResponse);
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 400 });
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        return NextResponse.json({ error: errorMessage }, { status: 400 });
     }
 }
