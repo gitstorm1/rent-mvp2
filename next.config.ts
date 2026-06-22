@@ -5,9 +5,9 @@ const nextConfig: NextConfig = {
     serverExternalPackages: ["pdf-parse"],
     experimental: {
         serverActions: {
-            bodySizeLimit: "30mb",
+            bodySizeLimit: "5mb",
         },
-        proxyClientMaxBodySize: "30mb",
+        proxyClientMaxBodySize: "5mb",
     }
 };
 
