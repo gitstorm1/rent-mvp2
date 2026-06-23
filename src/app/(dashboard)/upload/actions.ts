@@ -5,17 +5,17 @@ import { createClient } from '@/lib/server';
 import { extractBillDetails } from './billExtractor';
 
 export async function processBillFile(blobUrl: string) {
-    const supabase = await createClient();
-
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-        return { success: false, error: 'Unauthorized' };
-    }
-
     try {
+        const supabase = await createClient();
+
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+            return { success: false, error: 'Unauthorized' };
+        }
+
         const data = await extractBillDetails(blobUrl);
         return { success: true, data };
     } catch (error: unknown) {
