@@ -20,9 +20,16 @@ export async function processBillFile(blobUrl: string) {
         return { success: true, data };
     } catch (error: unknown) {
         const errorMessage =
-      error instanceof Error ? error.message : 'An unknown error occurred';
+            error instanceof Error ? error.message : 'An unknown error occurred';
         return { success: false, error: errorMessage };
     } finally {
-        await del(blobUrl).catch(() => {});
+        await del(
+            blobUrl,
+            {
+                token: process.env.BLOB_READ_WRITE_TOKEN,
+            }
+        ).catch((err: unknown) => {
+            console.error('Failed to delete blob from Vercel Blob storage:', err);
+        });
     }
 }
