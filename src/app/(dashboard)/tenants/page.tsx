@@ -36,24 +36,34 @@ export default async function TenantsPage() {
                                 </div>
                             </div>
                             <div className="p-0">
-                                {property.tenants.length === 0 ? (
-                                    <div className="p-6 text-sm text-slate-500 text-center">No tenants assigned.</div>
-                                ) : (
-                                    <ul className="divide-y divide-slate-100">
-                                        {property.tenants.map((tenant: any) => (
-                                            <li key={tenant.id} className="px-6 py-4 flex justify-between items-center hover:bg-slate-50 transition-colors">
-                                                <div>
-                                                    <p className="font-medium text-slate-900">{tenant.name}</p>
-                                                    <p className="text-sm text-slate-500">{tenant.phone_number}</p>
-                                                </div>
-                                                <div className="text-right">
-                                                    <p className="font-semibold text-slate-900">${Number(tenant.rent_amount).toFixed(2)}</p>
-                                                    <p className="text-xs text-slate-500">Due day: {tenant.due_date_day}</p>
-                                                </div>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
+                                {(() => {
+                                    const tenants = Array.isArray(property.tenants)
+                                        ? property.tenants
+                                        : property.tenants
+                                            ? [property.tenants]
+                                            : [];
+                                    
+                                    if (tenants.length === 0) {
+                                        return <div className="p-6 text-sm text-slate-500 text-center">No tenants assigned.</div>;
+                                    }
+
+                                    return (
+                                        <ul className="divide-y divide-slate-100">
+                                            {tenants.map((tenant: any) => (
+                                                <li key={tenant.id} className="px-6 py-4 flex justify-between items-center hover:bg-slate-50 transition-colors">
+                                                    <div>
+                                                        <p className="font-medium text-slate-900">{tenant.name}</p>
+                                                        <p className="text-sm text-slate-500">{tenant.phone_number}</p>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <p className="font-semibold text-slate-900">${Number(tenant.rent_amount).toFixed(2)}</p>
+                                                        <p className="text-xs text-slate-500">Due day: {tenant.due_date_day}</p>
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    );
+                                })()}
                             </div>
                         </div>
                     ))
