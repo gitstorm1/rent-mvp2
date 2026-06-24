@@ -44,7 +44,7 @@ export function TenantModals({ properties }: { properties: any[] }) {
             </div>
 
             {isPropertyModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm w-screen h-screen">
                     <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
                         <h3 className="text-lg font-semibold mb-4 text-slate-900">Add Property</h3>
                         <form onSubmit={handleAddProperty} className="space-y-4">
@@ -68,7 +68,7 @@ export function TenantModals({ properties }: { properties: any[] }) {
             )}
 
             {isTenantModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm w-screen h-screen">
                     <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
                         <h3 className="text-lg font-semibold mb-4 text-slate-900">Add Tenant</h3>
                         {properties.length === 0 ? (
