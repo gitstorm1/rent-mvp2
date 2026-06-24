@@ -42,7 +42,7 @@ export default async function TenantsPage() {
                                         : property.tenants
                                             ? [property.tenants]
                                             : [];
-                                    
+
                                     if (tenants.length === 0) {
                                         return <div className="p-6 text-sm text-slate-500 text-center">No tenants assigned.</div>;
                                     }
@@ -56,8 +56,8 @@ export default async function TenantsPage() {
                                                         <p className="text-sm text-slate-500">{tenant.phone_number}</p>
                                                     </div>
                                                     <div className="text-right">
-                                                        <p className="font-semibold text-slate-900">${Number(tenant.rent_amount).toFixed(2)}</p>
-                                                        <p className="text-xs text-slate-500">Due day: {tenant.due_date_day}</p>
+                                                        <p className="font-semibold text-slate-900">Rs. {Number(tenant.rent_amount).toLocaleString()}</p>
+                                                        <p className="text-xs text-slate-500">Due date: {tenant.due_date_day}</p>
                                                     </div>
                                                 </li>
                                             ))}
