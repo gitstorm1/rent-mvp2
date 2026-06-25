@@ -139,12 +139,14 @@ export default async function DashboardPage() {
                                             <td className="px-6 py-4 font-medium text-slate-900">{tenant.name}</td>
                                             <td className="px-6 py-4 text-slate-600">{tenant.properties.name}</td>
                                             <td className="px-6 py-4 text-slate-600">
-                                                {new Date(item.due_date).toLocaleDateString()}
-                                                {new Date(item.due_date) < new Date() && (
-                                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
-                                                        Overdue
-                                                    </span>
-                                                )}
+                                                <div className="flex items-center gap-2">
+                                                    <span className="w-24 inline-block">{new Date(item.due_date).toLocaleDateString()}</span>
+                                                    {new Date(item.due_date) < new Date() && (
+                                                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                                            Overdue
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </td>
                                             <td className="px-6 py-4 font-semibold text-slate-900">
                                                 Rs. {item.balance.toFixed(2)}

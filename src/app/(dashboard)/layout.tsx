@@ -1,10 +1,10 @@
 import Link from 'next/link';
-import { Home, Users, Upload, LogOut } from 'lucide-react';
+import { Home, Users, Upload, LogOut, FileText } from 'lucide-react';
 
 export default async function DashboardLayout({
     children,
 }: {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }) {
     return (
         <div className="flex h-screen bg-slate-50">
@@ -20,22 +20,27 @@ export default async function DashboardLayout({
                         className="flex items-center px-3 py-2 text-slate-700 rounded-md hover:bg-slate-100 group"
                     >
                         <Home className="mr-3 h-5 w-5 text-slate-400 group-hover:text-slate-500" />
-            Dashboard
+                        Dashboard
                     </Link>
                     <Link
                         href="/tenants"
                         className="flex items-center px-3 py-2 text-slate-700 rounded-md hover:bg-slate-100 group"
                     >
                         <Users className="mr-3 h-5 w-5 text-slate-400 group-hover:text-slate-500" />
-            Tenants
+                        Tenants
                     </Link>
                     <Link
                         href="/upload"
                         className="flex items-center px-3 py-2 text-slate-700 rounded-md hover:bg-slate-100 group"
                     >
                         <Upload className="mr-3 h-5 w-5 text-slate-400 group-hover:text-slate-500" />
-            Upload Bill
+                        Upload Bill
                     </Link>
+                    <Link href="/ledger" prefetch={false} className="flex items-center px-3 py-2 text-slate-700 rounded-md hover:bg-slate-100 group">
+                        <FileText className="mr-3 h-5 w-5 text-slate-400 group-hover:text-slate-500" />
+                        Ledger
+                    </Link>
+
                 </nav>
 
                 <div className="p-4 border-t border-slate-200">
@@ -45,7 +50,7 @@ export default async function DashboardLayout({
                             className="flex w-full items-center px-3 py-2 text-sm text-slate-700 rounded-md hover:bg-slate-100 group"
                         >
                             <LogOut className="mr-3 h-4 w-4 text-slate-400 group-hover:text-slate-500" />
-              Sign out
+                            Sign out
                         </button>
                     </form>
                 </div>
