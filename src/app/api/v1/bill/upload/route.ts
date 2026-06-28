@@ -29,15 +29,15 @@ export async function POST(request: Request): Promise<NextResponse> {
                 };
             },
             /*onUploadCompleted: async ({ blob, tokenPayload }) => {
-                // Triggered after the upload is successfully finished
-                console.log('Upload completed:', blob.url);
-            },*/
+                      // Triggered after the upload is successfully finished
+                      console.log('Upload completed:', blob.url);
+                  },*/
         });
 
         return NextResponse.json(jsonResponse);
     } catch (error: unknown) {
         const errorMessage =
-      error instanceof Error ? error.message : 'An unknown error occurred';
+            error instanceof Error ? error.message : 'An unknown error occurred';
         return NextResponse.json({ error: errorMessage }, { status: 400 });
     }
 }

@@ -7,46 +7,46 @@ import { createClient } from '@/lib/server';
 const isDev = process.env.NODE_ENV === 'development';
 
 export async function login(formData: FormData) {
-    const supabase = await createClient();
+  const supabase = await createClient();
 
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
 
-    const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-    });
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-    if (error) {
-        if (isDev) {
-            console.error(error.message);
-        }
-        return redirect('/login?message=Could not authenticate user');
+  if (error) {
+    if (isDev) {
+      console.error(error.message);
     }
+    return redirect('/login?message=Could not authenticate user');
+  }
 
-    revalidatePath('/', 'layout');
-    redirect('/');
+  revalidatePath('/', 'layout');
+  redirect('/');
 }
 
 export async function signup(formData: FormData) {
-    const supabase = await createClient();
+  const supabase = await createClient();
 
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
 
-    const { error } = await supabase.auth.signUp({
-        email,
-        password,
-    });
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+  });
 
-    if (error) {
-        if (isDev) {
-            console.error(error.message);
-        }
-        return redirect('/login?message=Could not sign up user');
+  if (error) {
+    if (isDev) {
+      console.error(error.message);
     }
+    return redirect('/login?message=Could not sign up user');
+  }
 
-    redirect(
-        '/login?message=Check your email to verify your account before logging in.',
-    );
+  redirect(
+    '/login?message=Check your email to verify your account before logging in.',
+  );
 }

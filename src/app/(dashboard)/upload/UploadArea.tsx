@@ -12,7 +12,7 @@ export function UploadArea() {
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
     const handleUploadFiles = async (selectedFiles: File[]) => {
-        const validFiles = selectedFiles.filter(file => {
+        const validFiles = selectedFiles.filter((file) => {
             if (file.size > MAX_FILE_SIZE) {
                 alert(`File "${file.name}" exceeds the 5 MB limit.`);
                 return false;
@@ -27,7 +27,7 @@ export function UploadArea() {
         const uploadPromises = validFiles.map(async (file) => {
             try {
                 const uniqueFilename = `${crypto.randomUUID()}-${file.name}`;
-                
+
                 const blob = await upload(uniqueFilename, file, {
                     access: 'public',
                     handleUploadUrl: '/api/v1/bill/upload',
@@ -41,10 +41,11 @@ export function UploadArea() {
                     alert(`Error processing ${file.name}: ${result.error}`);
                 }
             } catch (error: unknown) {
-                const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+                const errorMessage =
+                    error instanceof Error ? error.message : 'An unknown error occurred';
                 alert(`Upload failed for ${file.name}: ${errorMessage}`);
             } finally {
-                setUploadingCount(prev => Math.max(0, prev - 1));
+                setUploadingCount((prev) => Math.max(0, prev - 1));
             }
         });
 
@@ -92,7 +93,8 @@ export function UploadArea() {
                     <div className="animate-pulse flex flex-col items-center">
                         <UploadCloud className="h-12 w-12 text-blue-500 mb-4" />
                         <p className="text-slate-600 font-medium">
-                            Uploading and parsing {uploadingCount} PDF{uploadingCount > 1 ? 's' : ''}...
+                            Uploading and parsing {uploadingCount} PDF
+                            {uploadingCount > 1 ? 's' : ''}...
                         </p>
                     </div>
                 ) : (

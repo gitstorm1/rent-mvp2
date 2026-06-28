@@ -15,9 +15,9 @@ const eslintConfig = defineConfig([
     ]),
     {
         rules: {
-            'indent': ['error', 4, { 'SwitchCase': 1 }]
-        }
-    }
+            indent: ['error', 4, { SwitchCase: 1 }],
+        },
+    },
 ]);
 
 export default eslintConfig;

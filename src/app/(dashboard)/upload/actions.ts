@@ -3,6 +3,7 @@
 import { del } from '@vercel/blob';
 import { createClient } from '@/lib/server';
 import { extractBillDetails } from './billExtractor';
+import { inngest } from '@/lib/innjest';
 
 export async function processBillFile(blobUrl: string) {
     try {
@@ -16,13 +17,25 @@ export async function processBillFile(blobUrl: string) {
             return { success: false, error: 'Unauthorized' };
         }
 
-        const data = await extractBillDetails(blobUrl);
-        return { success: true, data };
+        // Trigger Inngest background event
+        await inngest.send({
+            name: 'bill/uploaded',
+            data: {
+                blobUrl,
+                userId: user.id,
+            },
+        });
+
+        // Instantly return to the client
+        return { success: true, message: 'Processing started in background.' };
+
+        /*const data = await extractBillDetails(blobUrl);
+            return { success: true, data };*/
     } catch (error: unknown) {
         const errorMessage =
             error instanceof Error ? error.message : 'An unknown error occurred';
         return { success: false, error: errorMessage };
-    } finally {
+    } /*finally {
         await del(
             blobUrl,
             {
@@ -31,5 +44,5 @@ export async function processBillFile(blobUrl: string) {
         ).catch((err: unknown) => {
             console.error('Failed to delete blob from Vercel Blob storage:', err);
         });
-    }
+    }*/
 }
