@@ -4,6 +4,7 @@ import { del } from '@vercel/blob';
 import { createClient } from '@/lib/server';
 import { extractBillDetails } from './billExtractor';
 import { inngest } from '@/lib/innjest';
+import { validateBlobUrl } from '@/lib/blob-validator';
 
 export async function processBillFile(blobUrl: string) {
     try {
@@ -15,6 +16,12 @@ export async function processBillFile(blobUrl: string) {
 
         if (!user) {
             return { success: false, error: 'Unauthorized' };
+        }
+
+        // --- SECURITY VALIDATION ---
+        const isValid = await validateBlobUrl(blobUrl);
+        if (!isValid) {
+            return { success: false, error: 'Invalid file source detected.' };
         }
 
         // Trigger Inngest background event

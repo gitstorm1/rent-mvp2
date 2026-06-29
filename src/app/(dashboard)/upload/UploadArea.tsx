@@ -36,7 +36,7 @@ export function UploadArea() {
                 const result = await processBillFile(blob.url);
 
                 if (result.success) {
-                    console.log(`Extraction result for ${file.name}:`, result);
+                    console.log(`Uploaded successfully ${result.message}`);
                 } else {
                     alert(`Error processing ${file.name}: ${result.error}`);
                 }

@@ -5,7 +5,7 @@ import { createClient } from '@/lib/server';
 
 export const processBillUpload = inngest.createFunction(
     { id: 'process-bill-upload', triggers: { event: 'bill/uploaded' } },
-    async ({ event, step }) => {
+    async ({ event, step, logger }) => {
         const { blobUrl, userId } = event.data;
 
         // Step 1: Run the AI extraction model
@@ -13,10 +13,12 @@ export const processBillUpload = inngest.createFunction(
             return await extractBillDetails(blobUrl);
         });
 
+        logger.info('Extracted bill details:', billData);
+
         // Step 2: Save results to the database (Supabase)
-        await step.run('save-bill-to-db', async () => {
+        /*await step.run('save-bill-to-db', async () => {
             const supabase = await createClient();
-            /*const { error } = await supabase
+            const { error } = await supabase
                       .from("bills") // Ensure your schema has a matching table
                       .insert({
                           user_id: userId,
@@ -27,15 +29,15 @@ export const processBillUpload = inngest.createFunction(
                           status: "processed",
                       });
       
-                  if (error) throw new Error(`Database error: ${error.message}`);*/
-        });
+                  if (error) throw new Error(`Database error: ${error.message}`);
+        });*/
 
         // Step 3: Clean up the file from Vercel Blob
-        await step.run('delete-uploaded-blob', async () => {
+        /*await step.run('delete-uploaded-blob', async () => {
             await del(blobUrl, {
                 token: process.env.BLOB_READ_WRITE_TOKEN,
             });
-        });
+        });*/
 
         return { success: true, billData };
     },
