@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/server';
 import { inngest } from '@/lib/inngest';
-import { validateBlobUrl } from '@/lib/blob-validator';
+import { validateBlobUrl } from '@/lib/blobValidator';
 
 export async function processBillFile(blobUrl: string) {
     try {
