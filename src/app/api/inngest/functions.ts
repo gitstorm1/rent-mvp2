@@ -1,5 +1,5 @@
-import { inngest } from '@/lib/innjest';
-import { extractBillDetails } from '@/app/(dashboard)/upload/billExtractor';
+import { inngest } from '@/lib/inngest';
+import { extractBillDetails } from '@/lib/billExtractor';
 import { del } from '@vercel/blob';
 import { createClient } from '@/lib/server';
 

@@ -1,5 +1,5 @@
 import { serve } from 'inngest/next';
-import { inngest } from '@/lib/innjest';
+import { inngest } from '@/lib/inngest';
 import { processBillUpload } from './functions';
 
 export const { GET, POST, PUT } = serve({

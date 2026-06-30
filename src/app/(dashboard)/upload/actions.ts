@@ -1,9 +1,7 @@
 'use server';
 
-import { del } from '@vercel/blob';
 import { createClient } from '@/lib/server';
-import { extractBillDetails } from './billExtractor';
-import { inngest } from '@/lib/innjest';
+import { inngest } from '@/lib/inngest';
 import { validateBlobUrl } from '@/lib/blob-validator';
 
 export async function processBillFile(blobUrl: string) {
