@@ -8,10 +8,11 @@ const billSchema = {
             enum: ['Electricity', 'Gas', 'Water'],
         },
         billing_month: { type: 'STRING' },
-        amount_due: { type: 'NUMBER' },
         due_date: { type: 'STRING' },
+        amount_due: { type: 'NUMBER' },
+        consumer_number: { type: 'STRING' },
     },
-    required: ['bill_type', 'amount_due', 'due_date'],
+    required: ['bill_type', 'amount_due', 'due_date', 'consumer_number'],
 };
 
 export async function extractBillDetails(blobUrl: string) {
