@@ -10,9 +10,9 @@ const billSchema = {
         billing_month: { type: 'STRING' },
         due_date: { type: 'STRING' },
         amount_due: { type: 'NUMBER' },
-        consumer_number: { type: 'STRING' },
+        customer_number: { type: 'STRING' },
     },
-    required: ['bill_type', 'amount_due', 'due_date', 'consumer_number'],
+    required: ['bill_type', 'amount_due', 'due_date', 'customer_number'],
 };
 
 export async function extractBillDetails(blobUrl: string) {
@@ -30,7 +30,7 @@ export async function extractBillDetails(blobUrl: string) {
                             mimeType: 'application/pdf',
                         },
                     },
-                    { text: 'Extract details matching the schema.' },
+                    { text: 'Extract details matching the schema. customer_number can be either Customer Number, Account Number, or Consumer ID; extract the value that only has digits. Ignore any digits wrapped in parentheses (e.g. 123(4) is extracted as 123).' },
                 ],
             },
         ],
