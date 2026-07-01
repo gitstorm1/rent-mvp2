@@ -1,5 +1,6 @@
 allowBuilds:
   '@google/genai': true
+  inngest-cli: true
   protobufjs: true
   sharp: false
   unrs-resolver: false

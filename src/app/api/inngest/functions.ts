@@ -28,13 +28,13 @@ export const processBillUpload = inngest.createFunction(
                 }
             )
 
-            // 1. Find the property matching this customer number and bill type
+            // 1. Find the property matching this customer number and bill type (restricted to landlord)
             const { data: mapping, error: mappingError } = await supabase
                 .from('property_customer_numbers')
                 .select('property_id')
-                .eq('landlord_id', userId)
                 .eq('customer_number', billData.customer_number)
                 .eq('bill_type', billData.bill_type)
+                .eq('landlord_id', userId)
                 .maybeSingle();
             if (mappingError) {
                 throw new Error(`Database error finding property: ${mappingError.message}`);
@@ -42,12 +42,12 @@ export const processBillUpload = inngest.createFunction(
             if (!mapping) {
                 throw new Error(`No property found with customer number ${billData.customer_number} for ${billData.bill_type}`);
             }
-            // 2. Find the active tenant at that property
+            // 2. Find the active tenant at that property (restricted to landlord)
             const { data: tenant, error: tenantError } = await supabase
                 .from('tenants')
                 .select('id')
-                .eq('landlord_id', userId)
                 .eq('property_id', mapping.property_id)
+                .eq('landlord_id', userId)
                 .eq('is_active', true)
                 .maybeSingle();
             if (tenantError) {
@@ -56,21 +56,23 @@ export const processBillUpload = inngest.createFunction(
             if (!tenant) {
                 throw new Error(`No active tenant found for property ${mapping.property_id}`);
             }
-            // 3. Insert the bill record
-            const { error: insertError } = await supabase
+            // 3. Upsert the bill record (inserts or overwrites if conflict exists)
+            const { error: upsertError } = await supabase
                 .from('bills')
-                .insert({
+                .upsert({
                     landlord_id: userId,
                     tenant_id: tenant.id,
                     bill_type: billData.bill_type,
                     billing_month: billData.billing_month,
                     amount_due: billData.amount_due,
                     due_date: billData.due_date,
-                    pdf_url: blobUrl, // Assigning pdf_url here
+                    pdf_url: blobUrl,
                     status: 'unpaid',
+                }, {
+                    onConflict: 'tenant_id,bill_type,billing_month'
                 });
-            if (insertError) {
-                throw new Error(`Database error saving bill: ${insertError.message}`);
+            if (upsertError) {
+                throw new Error(`Database error saving bill: ${upsertError.message}`);
             }
         });
 
