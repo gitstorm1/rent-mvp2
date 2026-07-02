@@ -14,10 +14,19 @@ export async function POST(request: Request): Promise<NextResponse> {
                 // If unauthorized, throw an error.
                 const supabase = await createClient();
 
-                const {
-                    data: { user },
-                } = await supabase.auth.getUser();
-                if (!user) {
+                let userId: string | undefined;
+
+                if (process.env.NODE_ENV === 'development') {
+                    const { data: claimsData } = await supabase.auth.getClaims();
+                    userId = claimsData?.claims?.sub;
+                } else {
+                    const {
+                        data: { user },
+                    } = await supabase.auth.getUser();
+                    userId = user?.id;
+                }
+
+                if (!userId) {
                     throw new Error('Unauthorized');
                 }
 

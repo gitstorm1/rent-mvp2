@@ -9,13 +9,21 @@ export async function processBillFile(blobUrl: string) {
     try {
         const supabase = await createClient();
 
-        const {
-            data: { user },
-        } = await supabase.auth.getUser();
+        let userId: string | undefined;
+
+        if (process.env.NODE_ENV === 'development') {
+            const { data: claimsData } = await supabase.auth.getClaims();
+            userId = claimsData?.claims?.sub;
+        } else {
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+            userId = user?.id;
+        }
 
         const isValid = await validateBlobUrl(blobUrl);
 
-        if (!user) {
+        if (!userId) {
             if (isValid) {
                 await del(blobUrl, { token: process.env.BLOB_READ_WRITE_TOKEN });
             }
@@ -32,7 +40,7 @@ export async function processBillFile(blobUrl: string) {
             name: 'bill/uploaded',
             data: {
                 blobUrl,
-                userId: user.id,
+                userId,
             },
         });
 
