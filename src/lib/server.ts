@@ -1,3 +1,8 @@
+import dns from 'node:dns';
+if (process.env.NODE_ENV === 'development') {
+    dns.setDefaultResultOrder('ipv4first');
+}
+
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
