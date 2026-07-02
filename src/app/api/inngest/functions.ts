@@ -1,5 +1,5 @@
 import { inngest } from '@/lib/inngest';
-import { extractBillDetails } from '@/lib/billExtractor';
+import { extractBillDetails, validateExtractedBill, ExtractedBill } from '@/lib/billExtractor';
 import { createClient } from '@supabase/supabase-js';
 import { del } from '@vercel/blob';
 
@@ -8,13 +8,36 @@ export const processBillUpload = inngest.createFunction(
     async ({ event, step, logger }) => {
         const { blobUrl, userId } = event.data;
 
-        const billData = await step.run('extract-bill-details', async () => {
+        const extractionResult = await step.run('extract-bill-details', async (): Promise<{
+            isValid: boolean;
+            data: ExtractedBill | null;
+            error: string | null;
+        }> => {
             const data = await extractBillDetails(blobUrl);
 
             logger.info('Extracted bill details:', data);
 
-            return data
+            try {
+                validateExtractedBill(data);
+                return { isValid: true, data, error: null };
+            } catch (err: any) {
+                logger.warn('Bill validation failed:', err.message);
+                return { isValid: false, data: null, error: err.message };
+            }
         });
+
+        // If the document is not a valid bill, skip database saving and delete the uploaded blob
+        if (!extractionResult.isValid || !extractionResult.data) {
+            await step.run('delete-invalid-bill', async () => {
+                await del(blobUrl, {
+                    token: process.env.BLOB_READ_WRITE_TOKEN,
+                });
+            });
+
+            return { success: false, error: extractionResult.error };
+        }
+
+        const billData = extractionResult.data;
 
         const oldPdfUrl = await step.run('save-bill-to-db', async () => {
             const supabase = createClient(
@@ -47,11 +70,13 @@ export const processBillUpload = inngest.createFunction(
             return data;
         });
 
-        await step.run('delete-uploaded-blob', async () => {
-            await del(oldPdfUrl, {
-                token: process.env.BLOB_READ_WRITE_TOKEN,
+        if (oldPdfUrl) {
+            await step.run('delete-old-pdf', async () => {
+                await del(oldPdfUrl, {
+                    token: process.env.BLOB_READ_WRITE_TOKEN,
+                });
             });
-        });
+        }
 
         return { success: true, billData };
     },
