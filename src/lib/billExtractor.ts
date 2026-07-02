@@ -8,7 +8,10 @@ const billSchema = {
             enum: ['Electricity', 'Gas', 'Water'],
         },
         billing_month: { type: 'STRING' },
-        due_date: { type: 'STRING' },
+        due_date: { 
+            type: 'STRING',
+            description: 'The due date of the bill formatted strictly as YYYY-MM-DD (e.g. 2026-05-19).'
+        },
         amount_due: { type: 'NUMBER' },
         customer_number: { type: 'STRING' },
     },
@@ -30,7 +33,7 @@ export async function extractBillDetails(blobUrl: string) {
                             mimeType: 'application/pdf',
                         },
                     },
-                    { text: 'Extract details matching the schema. customer_number can be either Customer Number, Account Number, or Consumer ID; extract the value that only has digits. Ignore any digits wrapped in parentheses (e.g. 123(4) is extracted as 123).' },
+                    { text: 'Extract details matching the schema. Return the due_date strictly formatted as YYYY-MM-DD. customer_number can be either Customer Number, Account Number, or Consumer ID; extract the value that only has digits. Ignore any digits wrapped in parentheses (e.g. 123(4) is extracted as 123).' },
                 ],
             },
         ],
